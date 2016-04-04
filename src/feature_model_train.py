@@ -5,8 +5,6 @@ denoise autodecoder with noise rate of 0.3.
 
 """
 
-import os
-import sys
 import timeit
 
 import numpy
@@ -16,11 +14,12 @@ import theano.tensor as T
 from theano.tensor.shared_randomstreams import RandomStreams
 
 from dA import dA
+from data_loader import load_data
 
 def test_dA(learning_rate=0.1, training_epochs=15,
             # -- change to local path
-            dataset='mnist.pkl.gz',
-            batch_size=20, output_folder='dA_plots'):
+            dataset="dataset,
+            batch_size=20):
 
     """
     Feed data into denoise autoencoder to train a model,
@@ -39,10 +38,6 @@ def test_dA(learning_rate=0.1, training_epochs=15,
     x = T.matrix('x')  # the data is presented as rasterized images
     # end-snippet-2
 
-    if not os.path.isdir(output_folder):
-        os.makedirs(output_folder)
-    os.chdir(output_folder)
-
     ####################################
     # BUILDING THE MODEL NO CORRUPTION #
     ####################################
@@ -54,66 +49,10 @@ def test_dA(learning_rate=0.1, training_epochs=15,
         numpy_rng=rng,
         theano_rng=theano_rng,
         input=x,
-        n_visible=28 * 28,
-        n_hidden=500
-    )
-
-    cost, updates = da.get_cost_updates(
-        corruption_level=0.,
-        learning_rate=learning_rate
-    )
-
-    train_da = theano.function(
-        [index],
-        cost,
-        updates=updates,
-        givens={
-            x: train_set_x[index * batch_size: (index + 1) * batch_size]
-        }
-    )
-
-    start_time = timeit.default_timer()
-
-    ############
-    # TRAINING #
-    ############
-
-    # go through training epochs
-    for epoch in range(training_epochs):
-        # go through trainng set
-        c = []
-        for batch_index in range(n_train_batches):
-            c.append(train_da(batch_index))
-
-        print('Training epoch %d, cost ' % epoch, numpy.mean(c))
-
-    end_time = timeit.default_timer()
-
-    training_time = (end_time - start_time)
-
-    print(('The no corruption code for file ' +
-           os.path.split(__file__)[1] +
-           ' ran for %.2fm' % ((training_time) / 60.)), file=sys.stderr)
-    image = Image.fromarray(
-        tile_raster_images(X=da.W.get_value(borrow=True).T,
-                           img_shape=(28, 28), tile_shape=(10, 10),
-                           tile_spacing=(1, 1)))
-    image.save('filters_corruption_0.png')
-
-    # start-snippet-3
-    #####################################
-    # BUILDING THE MODEL CORRUPTION 30% #
-    #####################################
-
-    rng = numpy.random.RandomState(123)
-    theano_rng = RandomStreams(rng.randint(2 ** 30))
-
-    da = dA(
-        numpy_rng=rng,
-        theano_rng=theano_rng,
-        input=x,
-        n_visible=28 * 28,
-        n_hidden=500
+        # -- needs to declare the total input feature numbers
+        n_visible="num_visible,
+        # -- needs to declare the total hidden unit feature numbers
+        n_hidden="num_hidden
     )
 
     cost, updates = da.get_cost_updates(
@@ -149,21 +88,13 @@ def test_dA(learning_rate=0.1, training_epochs=15,
 
     training_time = (end_time - start_time)
 
-    print(('The 30% corruption code for file ' +
-           os.path.split(__file__)[1] +
-           ' ran for %.2fm' % (training_time / 60.)), file=sys.stderr)
-    # end-snippet-3
+    ## -- need to came up with a way to visualize the model
 
-    # start-snippet-4
-    image = Image.fromarray(tile_raster_images(
-        X=da.W.get_value(borrow=True).T,
-        img_shape=(28, 28), tile_shape=(10, 10),
-        tile_spacing=(1, 1)))
-    image.save('filters_corruption_30.png')
-    # end-snippet-4
-
-    os.chdir('../')
-
+    # image = Image.fromarray(
+    #     tile_raster_images(X=da.W.get_value(borrow=True).T,
+    #                        img_shape=(28, 28), tile_shape=(10, 10),
+    #                        tile_spacing=(1, 1)))
+    # image.save('filters_corruption_0.png')
 
 if __name__ == '__main__':
     test_dA()
