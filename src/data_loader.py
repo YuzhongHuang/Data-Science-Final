@@ -1,4 +1,4 @@
-"""load_data.py
+"""data_loader.py
 ~~~~~~~~~~~~~~
 
 A local data loader program that grab medical entries data from 
@@ -9,9 +9,14 @@ To make the loader more efficient, the program allows user to save
 and load the loader object through the use of pickle.
 
 """
+from theano import *
+import theano.tensor as T
+
+import pandas
+import numpy
 
 def load_data(dataset):
-	""" Loads the dataset
+    """ Loads the dataset
 
     :type dataset: string
     :param dataset: the path to the dataset
@@ -19,17 +24,43 @@ def load_data(dataset):
     """
 
     def read_csv(dataset):
-    	""" Reads an csv file and converts to (train, val, test)
-    	with each of the form (inputs, targets)
+        """ Reads an csv file and converts to (train, val, test)
+        with each of the form (inputs, targets)
 
-    	:type dataset: string
-    	:param dataset: the path to the dataset
+        :type dataset: string
+        :param dataset: the path to the dataset
 
-    	"""
+        """
+        # default values
+        target_name = "blood" # default target column
+        train_percent = 0.5 # default trainset percentage
+        val_percent = 0.2 # default valset percentage
+        test_percent = 0.3 # default testset percentage
 
-    	# -- needs to be implemented
+        # process dataset to form (inputs, targets)
+        data = pandas.read_csv(dataset) # import from dataset
+        targets = data[target_name].as_matrix() # get the target column as numpy array
 
-    	return train, val, test
+        data = data.drop(target_name, 1) # get a dataframe with the remaining features
+        inputs = data.as_matrix() # get the feature matrix as numpy matrix
+
+        entries = targets.shape[0] # total entries of dataset
+
+        # use permutation to generate random indices
+        indices = numpy.random.permutation(entries) 
+
+        # get randomized indices for each datasets
+        train_idx = indices[:int(train_percent*entries)] 
+        val_idx = indices[int(train_percent*entries):int(test_percent*entries)]
+        test_idx = indices[int(test_percent*entries):]
+
+        train = (inputs[train_idx,:], targets[train_idx])
+        val = (inputs[val_idx,:], targets[val_idx])
+        test = (inputs[test_idx,:], targets[test_idx])
+
+        print (train[0][0])
+
+        return train, val, test
 
     def shared_dataset(data_xy, borrow=True):
         """ Function that loads the dataset into shared variables
@@ -66,3 +97,4 @@ def load_data(dataset):
             (test_set_x, test_set_y)]
     return rval
 
+load_data("../data/processed/clean_synthesized_data.csv")
