@@ -16,10 +16,10 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from dA import dA
 from data_loader import load_data
 
-def test_dA(learning_rate=0.1, training_epochs=15,
+def test_dA(learning_rate=0.0001, training_epochs=15,
             # -- change to local path
-            dataset="dataset,
-            batch_size=20):
+            dataset="../data/processed/clean_synthesized_data.csv",
+            batch_size=50):
 
     """
     Feed data into denoise autoencoder to train a model,
@@ -50,9 +50,9 @@ def test_dA(learning_rate=0.1, training_epochs=15,
         theano_rng=theano_rng,
         input=x,
         # -- needs to declare the total input feature numbers
-        n_visible="num_visible,
+        n_visible=train_set_x.get_value(borrow=True)[0].shape[0],
         # -- needs to declare the total hidden unit feature numbers
-        n_hidden="num_hidden
+        n_hidden=22
     )
 
     cost, updates = da.get_cost_updates(
@@ -82,13 +82,13 @@ def test_dA(learning_rate=0.1, training_epochs=15,
         for batch_index in range(n_train_batches):
             c.append(train_da(batch_index))
 
-        print('Training epoch %d, cost ' % epoch, numpy.mean(c))
+        print 'Training epoch %d, cost: ' %epoch, numpy.mean(c)
 
     end_time = timeit.default_timer()
 
     training_time = (end_time - start_time)
 
-    ## -- need to came up with a way to visualize the model
+    ## -- need to come up with a way to visualize the model
 
     # image = Image.fromarray(
     #     tile_raster_images(X=da.W.get_value(borrow=True).T,

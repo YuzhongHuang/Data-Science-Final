@@ -58,8 +58,6 @@ def load_data(dataset):
         val = (inputs[val_idx,:], targets[val_idx])
         test = (inputs[test_idx,:], targets[test_idx])
 
-        print (train[0][0])
-
         return train, val, test
 
     def shared_dataset(data_xy, borrow=True):
@@ -96,5 +94,3 @@ def load_data(dataset):
     rval = [(train_set_x, train_set_y), (valid_set_x, valid_set_y),
             (test_set_x, test_set_y)]
     return rval
-
-load_data("../data/processed/clean_synthesized_data.csv")

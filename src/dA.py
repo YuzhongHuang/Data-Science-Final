@@ -23,10 +23,10 @@ class dA(object):
     def __init__(
         self,
         numpy_rng,
+        n_visible,
+        n_hidden,
         theano_rng=None,
         input=None,
-        n_visible=784,
-        n_hidden=500,
         W=None,
         bhid=None,
         bvis=None
