@@ -16,7 +16,7 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from dA import dA
 from data_loader import load_data
 
-def test_dA(learning_rate=0.0001, training_epochs=15,
+def test_dA(learning_rate=0.0000001, training_epochs=15,
             # -- change to local path
             dataset="../data/processed/clean_synthesized_data.csv",
             batch_size=50):
@@ -48,7 +48,7 @@ def test_dA(learning_rate=0.0001, training_epochs=15,
     da = dA(
         numpy_rng=rng,
         theano_rng=theano_rng,
-        input=x,
+        inputs=x,
         # -- needs to declare the total input feature numbers
         n_visible=train_set_x.get_value(borrow=True)[0].shape[0],
         # -- needs to declare the total hidden unit feature numbers
@@ -80,6 +80,7 @@ def test_dA(learning_rate=0.0001, training_epochs=15,
         # go through trainng set
         c = []
         for batch_index in range(n_train_batches):
+
             c.append(train_da(batch_index))
 
         print 'Training epoch %d, cost: ' %epoch, numpy.mean(c)

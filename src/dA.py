@@ -26,7 +26,7 @@ class dA(object):
         n_visible,
         n_hidden,
         theano_rng=None,
-        input=None,
+        inputs=None,
         W=None,
         bhid=None,
         bvis=None
@@ -129,16 +129,16 @@ class dA(object):
         self.W_prime = self.W.T
         self.theano_rng = theano_rng
         # if no input is given, generate a variable representing the input
-        if input is None:
+        if inputs is None:
             # we use a matrix because we expect a minibatch of several
             # examples, each example being a row
             self.x = T.dmatrix(name='input')
         else:
-            self.x = input
+            self.x = inputs
 
         self.params = [self.W, self.b, self.b_prime]
 
-    def get_corrupted_input(self, input, corruption_level):
+    def get_corrupted_input(self, inputs, corruption_level):
         """This function keeps ``1-corruption_level`` entries of the inputs the
         same and zero-out randomly selected subset of size ``coruption_level``
         Note : first argument of theano.rng.binomial is the shape(size) of
@@ -160,13 +160,13 @@ class dA(object):
                 correctly as it only support float32 for now.
 
         """
-        return self.theano_rng.binomial(size=input.shape, n=1,
+        return self.theano_rng.binomial(size=inputs.shape, n=1,
                                         p=1 - corruption_level,
-                                        dtype=theano.config.floatX) * input
+                                        dtype=theano.config.floatX) * inputs
 
-    def get_hidden_values(self, input):
+    def get_hidden_values(self, inputs):
         """ Computes the values of the hidden layer """
-        return T.nnet.sigmoid(T.dot(input, self.W) + self.b)
+        return T.nnet.sigmoid(T.dot(inputs, self.W) + self.b)
 
     def get_reconstructed_input(self, hidden):
         """Computes the reconstructed input given the values of the
@@ -192,7 +192,6 @@ class dA(object):
         #        compute the average of all these to get the cost of
         #        the minibatch
         cost = T.mean(L)
-
         # compute the gradients of the cost of the `dA` with respect
         # to its parameters
         gparams = T.grad(cost, self.params)
