@@ -132,7 +132,7 @@ class dA(object):
         if inputs is None:
             # we use a matrix because we expect a minibatch of several
             # examples, each example being a row
-            self.x = T.dmatrix(name='input')
+            self.x = T.dmatrix(name='inputs')
         else:
             self.x = inputs
 
