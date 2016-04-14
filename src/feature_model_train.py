@@ -16,7 +16,7 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from dA import dA
 from data_loader import load_data
 
-def test_dA(learning_rate=0.0000001, training_epochs=15,
+def test_dA(learning_rate=0.01, training_epochs=50,
             # -- change to local path
             dataset="../data/processed/clean_synthesized_data.csv",
             batch_size=50):

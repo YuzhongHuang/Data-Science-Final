@@ -43,6 +43,7 @@ def load_data(dataset):
 
         data = data.drop(target_name, 1) # get a dataframe with the remaining features
         inputs = data.as_matrix() # get the feature matrix as numpy matrix
+        inputs = inputs[:, 1:] # drop the index column
 
         entries = targets.shape[0] # total entries of dataset
 
