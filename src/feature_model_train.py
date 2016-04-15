@@ -94,9 +94,9 @@ def test_dA(learning_rate=0.01, training_epochs=100,
 
     weights = da.W.get_value(borrow=True)
 
-    column_lst = ['Gender', 'YearOfBirth', 'Height', 'Weight',
+    column_lst = ['DMIndicator', 'Gender', 'YearOfBirth', 'Height', 'Weight',
        'SystolicBP', 'DiastolicBP', 'RespiratoryRate', 'Temperature',
-       'blood', 'circulatory', 'congenital', 'digestive', 'endocrine',
+       'circulatory', 'congenital', 'digestive', 'endocrine',
        'external_injury', 'genitourinary', 'infectious',
        'injury_poisoning', 'mental_disorders', 'musculoskeletal',
        'neoplasms', 'nervous', 'perinatal', 'pregnancy', 'respiratory',
