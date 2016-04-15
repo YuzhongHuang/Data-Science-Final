@@ -8,6 +8,7 @@ denoise autodecoder with noise rate of 0.3.
 import timeit
 
 import numpy
+import pandas
 
 import theano
 import theano.tensor as T
@@ -16,7 +17,7 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from dA import dA
 from data_loader import load_data
 
-def test_dA(learning_rate=0.01, training_epochs=50,
+def test_dA(learning_rate=0.01, training_epochs=100,
             # -- change to local path
             dataset="../data/processed/clean_synthesized_data.csv",
             batch_size=50):
@@ -28,7 +29,7 @@ def test_dA(learning_rate=0.01, training_epochs=50,
     """
     datasets = load_data(dataset)
     train_set_x, train_set_y = datasets[0]
-
+    
     # compute number of minibatches for training, validation and testing
     n_train_batches = train_set_x.get_value(borrow=True).shape[0] // batch_size
 
@@ -90,6 +91,23 @@ def test_dA(learning_rate=0.01, training_epochs=50,
     training_time = (end_time - start_time)
 
     ## -- need to come up with a way to visualize the model
+
+    weights = da.W.get_value(borrow=True)
+
+    column_lst = ['Gender', 'YearOfBirth', 'Height', 'Weight',
+       'SystolicBP', 'DiastolicBP', 'RespiratoryRate', 'Temperature',
+       'blood', 'circulatory', 'congenital', 'digestive', 'endocrine',
+       'external_injury', 'genitourinary', 'infectious',
+       'injury_poisoning', 'mental_disorders', 'musculoskeletal',
+       'neoplasms', 'nervous', 'perinatal', 'pregnancy', 'respiratory',
+       'sense', 'skin', 'symptoms']
+
+    df = pandas.DataFrame(index=range(da.n_hidden), columns=column_lst)
+
+    for i in range(len(column_lst)):
+        df[column_lst[i]] = weights[i]
+
+    df.to_csv("../data/processed/weights_table.csv")
 
     # image = Image.fromarray(
     #     tile_raster_images(X=da.W.get_value(borrow=True).T,
