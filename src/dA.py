@@ -213,4 +213,15 @@ class dA(object):
         with open(filename+'.pickle', 'wb') as handle:
             pickle.dump(self, handle)
 
+    @staticmethod
+    def load(filename):
+        """ This function will load a dA under given filename through
+        the use of pickle
+
+        """
+        with open(filename+'.pickle', 'rb') as handle:
+            da = pickle.load(handle)
+        return da
+
+
 
