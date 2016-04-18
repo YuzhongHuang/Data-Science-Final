@@ -102,18 +102,17 @@ def test_dA(learning_rate=0.01, training_epochs=100,
        'neoplasms', 'nervous', 'perinatal', 'pregnancy', 'respiratory',
        'sense', 'skin', 'symptoms']
 
-    df = pandas.DataFrame(index=range(da.n_hidden), columns=column_lst)
+    # df = pandas.DataFrame(index=range(da.n_hidden), columns=column_lst)
 
-    for i in range(len(column_lst)):
-        df[column_lst[i]] = weights[i]
+    # for i in range(len(column_lst)):
+    #     df[column_lst[i]] = weights[i]
 
-    df.to_csv("../data/processed/weights_table.csv")
+    # df.to_csv("../data/processed/weights_table.csv")
 
-    # image = Image.fromarray(
-    #     tile_raster_images(X=da.W.get_value(borrow=True).T,
-    #                        img_shape=(28, 28), tile_shape=(10, 10),
-    #                        tile_spacing=(1, 1)))
-    # image.save('filters_corruption_0.png')
+    
+
+    def feed(row, net):
+        return numpy.dot(net.W.get_value(borrow=True), row)
 
 if __name__ == '__main__':
     test_dA()
