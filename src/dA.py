@@ -203,4 +203,12 @@ class dA(object):
 
         return (cost, updates)
 
+    def save(self, filename):
+        """ This function will save the dA under given filename through
+        the use of pickle
+
+        """
+        with open(filename+'.pickle', 'wb') as handle:
+            pickle.dump(self, handle)
+
 
