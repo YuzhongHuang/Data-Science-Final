@@ -1,4 +1,5 @@
-"""feature learning model training
+"""train.py
+~~~~~~~~~~~~~~
 
 This file contains the code for training a 
 denoise autodecoder with noise rate of 0.3.
@@ -8,7 +9,6 @@ denoise autodecoder with noise rate of 0.3.
 import timeit
 
 import numpy
-import pandas
 
 import theano
 import theano.tensor as T
@@ -17,8 +17,8 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from dA import dA
 from data_loader import load_data
 
-def test_dA(learning_rate=0.01, training_epochs=100,
-            # -- change to local path
+def test_dA(learning_rate=0.01, 
+            training_epochs=100,
             dataset="../data/processed/clean_synthesized_data.csv",
             batch_size=50):
 
@@ -33,11 +33,9 @@ def test_dA(learning_rate=0.01, training_epochs=100,
     # compute number of minibatches for training, validation and testing
     n_train_batches = train_set_x.get_value(borrow=True).shape[0] // batch_size
 
-    # start-snippet-2
     # allocate symbolic variables for the data
     index = T.lscalar()    # index to a [mini]batch
     x = T.matrix('x')  # the data is presented as rasterized images
-    # end-snippet-2
 
     ####################################
     # BUILDING THE MODEL NO CORRUPTION #
@@ -78,42 +76,16 @@ def test_dA(learning_rate=0.01, training_epochs=100,
 
     # go through training epochs
     for epoch in range(training_epochs):
-        # go through trainng set
         c = []
+        # go through trainng set
         for batch_index in range(n_train_batches):
-
             c.append(train_da(batch_index))
-
         print 'Training epoch %d, cost: ' %epoch, numpy.mean(c)
 
+    da.save("model")
+
     end_time = timeit.default_timer()
-
     training_time = (end_time - start_time)
-
-    ## -- need to come up with a way to visualize the model
-
-    weights = da.W.get_value(borrow=True)
-
-    column_lst = ['DMIndicator', 'Gender', 'YearOfBirth', 'Height', 'Weight',
-       'SystolicBP', 'DiastolicBP', 'RespiratoryRate', 'Temperature',
-       'circulatory', 'congenital', 'digestive', 'endocrine',
-       'external_injury', 'genitourinary', 'infectious',
-       'injury_poisoning', 'mental_disorders', 'musculoskeletal',
-       'neoplasms', 'nervous', 'perinatal', 'pregnancy', 'respiratory',
-       'sense', 'skin', 'symptoms']
-
-    df = pandas.DataFrame(index=range(da.n_hidden), columns=column_lst)
-
-    for i in range(len(column_lst)):
-        df[column_lst[i]] = weights[i]
-
-    df.to_csv("../data/processed/weights_table.csv")
-
-    # image = Image.fromarray(
-    #     tile_raster_images(X=da.W.get_value(borrow=True).T,
-    #                        img_shape=(28, 28), tile_shape=(10, 10),
-    #                        tile_spacing=(1, 1)))
-    # image.save('filters_corruption_0.png')
 
 if __name__ == '__main__':
     test_dA()

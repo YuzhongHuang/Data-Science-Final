@@ -1,4 +1,5 @@
-"""
+""" dA.py
+~~~~~~~~~~~~~~
 
 This module contains the denoise autodecoder class built with 
 theano. 
@@ -6,6 +7,7 @@ theano.
 """
 
 import numpy
+import pickle
 
 import theano
 import theano.tensor as T
@@ -202,5 +204,24 @@ class dA(object):
         ]
 
         return (cost, updates)
+
+    def save(self, filename):
+        """ This function will save the dA under given filename through
+        the use of pickle
+
+        """
+        with open(filename+'.pickle', 'wb') as handle:
+            pickle.dump(self, handle)
+
+    @staticmethod
+    def load(filename):
+        """ This function will load a dA under given filename through
+        the use of pickle
+
+        """
+        with open(filename+'.pickle', 'rb') as handle:
+            da = pickle.load(handle)
+        return da
+
 
 
