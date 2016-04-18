@@ -8,7 +8,6 @@ denoise autodecoder with noise rate of 0.3.
 import timeit
 
 import numpy
-import pandas
 
 import theano
 import theano.tensor as T
@@ -76,13 +75,13 @@ def test_dA(learning_rate=0.01,
 
     # go through training epochs
     for epoch in range(training_epochs):
-        # go through trainng set
         c = []
+        # go through trainng set
         for batch_index in range(n_train_batches):
-
             c.append(train_da(batch_index))
-
         print 'Training epoch %d, cost: ' %epoch, numpy.mean(c)
+
+    da.save("model")
 
     end_time = timeit.default_timer()
     training_time = (end_time - start_time)

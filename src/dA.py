@@ -6,6 +6,7 @@ theano.
 """
 
 import numpy
+import pickle
 
 import theano
 import theano.tensor as T

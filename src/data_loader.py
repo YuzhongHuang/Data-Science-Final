@@ -9,13 +9,12 @@ To make the loader more efficient, the program allows user to save
 and load the loader object through the use of pickle.
 
 """
+import numpy
+import pandas
+import pickle
+
 from theano import *
 import theano.tensor as T
-
-import pandas
-import numpy
-
-import pickle
 
 def load_data(dataset):
     """ Loads the dataset
