@@ -1,4 +1,5 @@
-"""feature learning model training
+"""train.py
+~~~~~~~~~~~~~~
 
 This file contains the code for training a 
 denoise autodecoder with noise rate of 0.3.

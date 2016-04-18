@@ -1,4 +1,5 @@
-"""
+""" dA.py
+~~~~~~~~~~~~~~
 
 This module contains the denoise autodecoder class built with 
 theano. 

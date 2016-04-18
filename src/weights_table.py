@@ -1,3 +1,12 @@
+""" weights_table.py
+~~~~~~~~~~~~~~
+
+Thie module contains a weights table generator
+that takes a given dA object and outputs its
+weights to a csv file  
+
+"""
+
 column_lst = ['DMIndicator', 'Gender', 'YearOfBirth', 'Height', 'Weight',
        'SystolicBP', 'DiastolicBP', 'RespiratoryRate', 'Temperature',
        'circulatory', 'congenital', 'digestive', 'endocrine',
