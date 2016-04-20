@@ -45,8 +45,8 @@ def read_csv(dataset):
 
     # get randomized indices for each datasets
     train_idx = indices[:int(train_percent*entries)] 
-    val_idx = indices[int(train_percent*entries):int(test_percent*entries)]
-    test_idx = indices[int(test_percent*entries):]
+    val_idx = indices[int(train_percent*entries):int(test_percent*entries)+int(train_percent*entries)]
+    test_idx = indices[int(test_percent*entries)+int(train_percent*entries):]
 
     train = (inputs[train_idx,:], targets[train_idx])
     val = (inputs[val_idx,:], targets[val_idx])
