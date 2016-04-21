@@ -25,7 +25,7 @@ def read_csv(dataset):
 
     """
     # default values
-    target_name = "blood" # default target column
+    target_name = "diabetes" # default target column
     train_percent = 0.5 # default trainset percentage
     val_percent = 0.2 # default valset percentage
     test_percent = 0.3 # default testset percentage
@@ -45,8 +45,8 @@ def read_csv(dataset):
 
     # get randomized indices for each datasets
     train_idx = indices[:int(train_percent*entries)] 
-    val_idx = indices[int(train_percent*entries):int(test_percent*entries)]
-    test_idx = indices[int(test_percent*entries):]
+    val_idx = indices[int(train_percent*entries):int(test_percent*entries)+int(train_percent*entries)]
+    test_idx = indices[int(test_percent*entries)+int(train_percent*entries):]
 
     train = (inputs[train_idx,:], targets[train_idx])
     val = (inputs[val_idx,:], targets[val_idx])

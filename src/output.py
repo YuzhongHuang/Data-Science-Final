@@ -17,7 +17,7 @@ from data_loader import shared_dataset
 def get_features(da, inputs):
     features = []
     for inp in inputs:
-        feature = da.get_reconstructed_input(da.get_hidden_values(inp)).eval()
+        feature = da.get_hidden_values(inp).eval()
         features.append(feature)
     return numpy.asarray(features)
 
