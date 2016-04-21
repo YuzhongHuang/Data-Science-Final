@@ -21,19 +21,35 @@ def get_features(da, inputs):
         features.append(feature)
     return numpy.asarray(features)
 
-def output(da_name, data_x, data_y, save_name):
+def output(da_name, data_x, data_y):
     da = dA.load(da_name)
     features = get_features(da, data_x)
     new_data = (features, data_y)
-    shared_new_data = shared_dataset(new_data)
+    return shared_dataset(new_data)
 
-    with open(save_name+'.pickle', 'wb') as handle:
-        pickle.dump(shared_new_data, handle)
+
+def save(filename, pkl):
+    with open(filename+'.pickle', 'wb') as handle:
+        pickle.dump(pkl, handle)
 
 datasets = load_data("../data/processed/clean_synthesized_data.csv")
-train_set_x, train_set_y = datasets[0]
 
+train_set_x, train_set_y = datasets[0]
 train_set_x = train_set_x.get_value(borrow=True)
 train_set_y = train_set_y.eval()
 
-output("model", train_set_x, train_set_y, "features")
+val_set_x, val_set_y = datasets[1]
+val_set_x = val_set_x.get_value(borrow=True)
+val_set_y = val_set_y.eval()
+
+test_set_x, test_set_y = datasets[2]
+test_set_x = test_set_x.get_value(borrow=True)
+test_set_y = test_set_y.eval()
+
+train = output("model", train_set_x, train_set_y)
+val = output("model", val_set_x, val_set_y)
+test = output("model", test_set_x, test_set_y)
+
+print datasets[][0].get_value().shape
+
+save("features", (train, val, test))
