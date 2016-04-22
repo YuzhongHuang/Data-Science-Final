@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Data-science-final by YuzhongHuang</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Data-science-final</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/YuzhongHuang/Data-Science-Final" class="btn">View on GitHub</a>
+      <a href="https://github.com/YuzhongHuang/Data-Science-Final/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/YuzhongHuang/Data-Science-Final/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="project-story-2" class="anchor" href="#project-story-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Story 2</h1>
+
+<h4>
+<a id="yuzhong-huang-jay-woo-wilson-tang" class="anchor" href="#yuzhong-huang-jay-woo-wilson-tang" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Yuzhong Huang, Jay Woo, Wilson Tang</h4>
+
+<h2>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overview</h2>
+
+<p>At the end of our last phase we were working on finishing our data exploration and reformating, feature learning neural network, feedforward prediction neural network, and visualizations of our feature learning model. During this phase, we built the feature learning systems, generated the learned features and recoded the icd-9 features. Right now, we are deploying the learned features to our prediction neural network to predict diabetes. </p>
+
+<h2>
+<a id="data-exploration--reformatting" class="anchor" href="#data-exploration--reformatting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Exploration + Reformatting</h2>
+
+<p>After extensive exploration of the data, we found that the lab and medication data was too diverse and weakly linked to our patients to utilize in our project. We decided to exclude the two and focus on the ICD-9 codes and general information such as age, gender, weight, height and etc.</p>
+
+<p>We tested 2 groupings for ICD-9 codes: 17 broad super-categories and 107 specific subcategories with our feature learning neural network (narrowing from 13,000 possible codes). </p>
+
+<p>We ended up deciding that 107 subcategories represented the ICD-9 data properly for our network.</p>
+
+<h2>
+<a id="feature-learning-neural-network" class="anchor" href="#feature-learning-neural-network" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Feature Learning Neural Network</h2>
+
+<p><img src="https://lh3.googleusercontent.com/-aLe_ZPvqpN8/VxkWaV0IsuI/AAAAAAAAAgw/oPE6EU8aet41ltkh9zLWfSrwDCbG1SCbACLcB/s0/autoencoder.png" alt="enter image description here" title="autoencoder.png"></p>
+
+<p>The autoencoder is a special kind of neural network that effectively reduces the dimensionality of the input. For example, by reducing 6 features to 4 features and then reconstructing the 6 features from 4 features, the network is forced to combine dimensions that are highly related to each other. In this way, the network could potentially extract some important features out from the raw inputs. </p>
+
+<p>We built a single-layer, denoising autoencoder and ran a simple example on it by taking 27 features and outputting 22 learned features. Also, we added 30% noise by setting 30 percent of the input features to be 0. By doing that, the network cannot rely much on each individual features, since some of the features are not reliable. Instead, the network is forced to learn the relationships between features to predict the value of noise by using other values. </p>
+
+<p>We trained 100 epochs over our network and compared the reconstructed features with the original ones. The result is quite inspiring: the standard deviation of the 27 reconstructed features is about 0.04. Since all of the input features are normalized and are in range of 0 to 1. With a standard deviation of 0.04, the model is doing a good job reconstructing the 27 features from the 22 learned features. But we still need to test how good are the 22 features in representing the data with our prediction network. </p>
+
+<h2>
+<a id="prediction-neural-network" class="anchor" href="#prediction-neural-network" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prediction Neural Network</h2>
+
+<p><img src="https://lh3.googleusercontent.com/-RMYxIditqtI/VxkWfqiDg1I/AAAAAAAAAg4/4sbdHwIk6x8TIuKPd4tc1KQXuN9w4WcnQCLcB/s0/neural_net.jpeg" alt="enter image description here" title="neural_net.jpeg"></p>
+
+<p>In order to predict which patients have diabetes, we trained a classic feed-forward neural network model on the medical record data. Each neuron in one layer is attached to everything in the next layer, such that the “activation energy” from an adjacent neuron propagates through the network. The neurons in the hidden layer(s) take in energy from all the preceding neurons, and if it reaches above a certain threshold, the node becomes activated. In the context of our dataset, we put in our features after putting them through the autoencoder. If the patient has diabetes, we would expect to see the output layer have a high value, and many of the hidden layer nodes would probably be activated. Otherwise, the output will be small.</p>
+
+<p>We implemented the neural network using Theano’s multilayer perceptron tutorial. We noticed that the model had an incredibly low error rate, even with randomized weights, but this was most likely due to the fact that there weren’t a lot of patients who have diabetes in the dataset (less than 1%). In the future, we are considering predicting for a more prevalent condition like hypertension, which many more the patients in our dataset actually have.</p>
+
+<h2>
+<a id="plans-for-final-phase" class="anchor" href="#plans-for-final-phase" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Plans for Final Phase</h2>
+
+<p>Our next step would be compare the prediction result of learned features with prediction result of original features. After that, we will build a stacked denoising autoencoder that learns higher level features. We hope to synthesize our prediction system and make the model general that can take a target name, and the system will generates a model for predicting the given target. We would also like to get some visualizations made by the end of the project, so that we can present our work very cleanly. One of our options is to visualize one of the hidden layers in the neural network to see what the model weights more heavily. Since our dataset does not comprise of images, it may be more difficult to make a clean graph.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/YuzhongHuang/Data-Science-Final">Data-science-final</a> is maintained by <a href="https://github.com/YuzhongHuang">YuzhongHuang</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
