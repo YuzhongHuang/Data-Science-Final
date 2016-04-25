@@ -25,7 +25,7 @@ def read_csv(dataset):
 
     """
     # default values
-    target_name = "diabetes" # default target column
+    target_name = "hypertension" # default target column
     train_percent = 0.5 # default trainset percentage
     val_percent = 0.2 # default valset percentage
     test_percent = 0.3 # default testset percentage

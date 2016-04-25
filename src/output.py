@@ -19,6 +19,7 @@ def get_features(da, inputs):
     for inp in inputs:
         feature = da.get_hidden_values(inp).eval()
         features.append(feature)
+        print len(features)
     return numpy.asarray(features)
 
 def output(da_name, data_x, data_y):
@@ -49,7 +50,5 @@ test_set_y = test_set_y.eval()
 train = output("model", train_set_x, train_set_y)
 val = output("model", val_set_x, val_set_y)
 test = output("model", test_set_x, test_set_y)
-
-print datasets[][0].get_value().shape
 
 save("features", (train, val, test))

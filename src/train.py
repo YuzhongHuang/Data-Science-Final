@@ -51,7 +51,7 @@ def test_dA(learning_rate=0.01,
         # -- needs to declare the total input feature numbers
         n_visible=train_set_x.get_value(borrow=True)[0].shape[0],
         # -- needs to declare the total hidden unit feature numbers
-        n_hidden=22
+        n_hidden=27
     )
 
     cost, updates = da.get_cost_updates(
