@@ -32,7 +32,8 @@ def read_csv(dataset):
 
     # process dataset to form (inputs, targets)
     data = pandas.read_csv(dataset) # import from dataset
-    targets = data[target_name].as_matrix() # get the target column as numpy array
+    targets = data[target_name].apply(round).apply(int).as_matrix() # get the target column as numpy array
+    print targets
 
     data = data.drop(target_name, 1) # get a dataframe with the remaining features
     inputs = data.as_matrix() # get the feature matrix as numpy matrix
