@@ -21,14 +21,15 @@ def test_dA(learning_rate=0.01,
             training_epochs=100,
             dataset="../data/processed/clean_synthesized_data.csv",
             batch_size=50,
-            n_hidden=80):
+            n_hidden=80,
+            target_name="hypertension"):
 
     """
     Feed data into denoise autoencoder to train a model,
     and test the model over test dataset
 
     """
-    datasets = load_data(dataset)
+    datasets = load_data(dataset, target_name)
     train_set_x, train_set_y = datasets[0]
 
     # compute number of minibatches for training, validation and testing
@@ -85,8 +86,4 @@ def test_dA(learning_rate=0.01,
 
     da.save("model")
 
-    end_time = timeit.default_timer()
-    training_time = (end_time - start_time)
-
-if __name__ == '__main__':
-    test_dA()
+    return da

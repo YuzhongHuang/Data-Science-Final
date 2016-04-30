@@ -16,7 +16,7 @@ import pickle
 from theano import *
 import theano.tensor as T
 
-def read_csv(dataset):
+def read_csv(dataset, target_name):
     """ Reads an csv file and converts to (train, val, test)
     with each of the form (inputs, targets)
 
@@ -25,7 +25,6 @@ def read_csv(dataset):
 
     """
     # default values
-    target_name = "hypertension" # default target column
     train_percent = 0.5 # default trainset percentage
     val_percent = 0.2 # default valset percentage
     test_percent = 0.3 # default testset percentage
@@ -49,6 +48,7 @@ def read_csv(dataset):
     val_idx = indices[int(train_percent*entries):int(test_percent*entries)+int(train_percent*entries)]
     test_idx = indices[int(test_percent*entries)+int(train_percent*entries):]
 
+    # get datasets
     train = (inputs[train_idx,:], targets[train_idx])
     val = (inputs[val_idx,:], targets[val_idx])
     test = (inputs[test_idx,:], targets[test_idx])
@@ -66,27 +66,25 @@ def shared_dataset(data_xy, borrow=True):
     """
     data_x, data_y = data_xy
     shared_x = theano.shared(numpy.asarray(data_x,
-                                           dtype="float64"),
+                                           dtype=theano.config.floatX),
                              borrow=borrow)
     shared_y = theano.shared(numpy.asarray(data_y,
-                                           dtype="float64"),
+                                           dtype=theano.config.floatX),
                              borrow=borrow)
     return shared_x, T.cast(shared_y, 'int32')
 
-def load_data(dataset):
+def load_data(dataset, target_name):
     """ Loads the dataset
 
     :type dataset: string
     :param dataset: the path to the dataset
     
     """
-    train_set, valid_set, test_set = read_csv(dataset)
+    train_set, valid_set, test_set = read_csv(dataset, target_name)
 
     test_set_x, test_set_y = shared_dataset(test_set)
     valid_set_x, valid_set_y = shared_dataset(valid_set)
     train_set_x, train_set_y = shared_dataset(train_set)
-
-    print train_set_x.get_value().dtype
 
     rval = [(train_set_x, train_set_y), (valid_set_x, valid_set_y),
             (test_set_x, test_set_y)]
