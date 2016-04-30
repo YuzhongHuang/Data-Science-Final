@@ -8,6 +8,7 @@ original features with a trained dA
 
 import numpy
 import pickle
+import theano
 
 from dA import dA
 from data_loader import load_data
@@ -47,8 +48,11 @@ test_set_x, test_set_y = datasets[2]
 test_set_x = test_set_x.get_value(borrow=True)
 test_set_y = test_set_y.eval()
 
-train = output("model", train_set_x, train_set_y)
-val = output("model", val_set_x, val_set_y)
-test = output("model", test_set_x, test_set_y)
+print(type(train_set_x[0][0]))
 
-save("features", (train, val, test))
+# train = output("model", train_set_x, train_set_y)
+# val = output("model", val_set_x, val_set_y)
+# test = output("model", test_set_x, test_set_y)
+# print test
+
+# save("features", (train, val, test))

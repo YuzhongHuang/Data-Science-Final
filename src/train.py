@@ -29,7 +29,7 @@ def test_dA(learning_rate=0.01,
     """
     datasets = load_data(dataset)
     train_set_x, train_set_y = datasets[0]
-    
+
     # compute number of minibatches for training, validation and testing
     n_train_batches = train_set_x.get_value(borrow=True).shape[0] // batch_size
 
@@ -51,7 +51,7 @@ def test_dA(learning_rate=0.01,
         # -- needs to declare the total input feature numbers
         n_visible=train_set_x.get_value(borrow=True)[0].shape[0],
         # -- needs to declare the total hidden unit feature numbers
-        n_hidden=27
+        n_hidden=80
     )
 
     cost, updates = da.get_cost_updates(
