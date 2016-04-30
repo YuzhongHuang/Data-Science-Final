@@ -20,7 +20,8 @@ from data_loader import load_data
 def test_dA(learning_rate=0.01, 
             training_epochs=100,
             dataset="../data/processed/clean_synthesized_data.csv",
-            batch_size=50):
+            batch_size=50,
+            n_hidden=80):
 
     """
     Feed data into denoise autoencoder to train a model,
@@ -51,7 +52,7 @@ def test_dA(learning_rate=0.01,
         # -- needs to declare the total input feature numbers
         n_visible=train_set_x.get_value(borrow=True)[0].shape[0],
         # -- needs to declare the total hidden unit feature numbers
-        n_hidden=80
+        n_hidden=n_hidden
     )
 
     cost, updates = da.get_cost_updates(
