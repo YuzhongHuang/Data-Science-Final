@@ -30,7 +30,7 @@ def test_dA(learning_rate=0.01,
     """
     datasets = load_data(dataset)
     train_set_x, train_set_y = datasets[0]
-    
+
     # compute number of minibatches for training, validation and testing
     n_train_batches = train_set_x.get_value(borrow=True).shape[0] // batch_size
 
