@@ -79,10 +79,10 @@ def output_features(path, target_name):
     val = output(dA, val_set_x, val_set_y)
     test = output(dA, test_set_x, test_set_y)
 
-    output = (train, val, test)
-    save("features_"+target_name, output)
+    res = (train, val, test)
+    save("features_"+target_name, res)
 
-    return output
+    return res
 
 
 

@@ -4,6 +4,7 @@ import theano
 
 from dA import dA
 from train import test_dA
+from NeuralNetwork.neural_network import test_mlp
 from output import output_features
 from data_loader import load_data
 from data_loader import shared_dataset
@@ -15,4 +16,4 @@ datasets = load_data(path, target_name)
 dA = test_dA(target_name=target_name, dataset=path)
 
 features = output_features(path, target_name)
-# network!
+test_mlp(fileName=features, saveName="dA_model.pkl")

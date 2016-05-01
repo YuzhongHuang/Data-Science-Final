@@ -173,8 +173,8 @@ class MLP(object):
 
 
 def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=5000,
-             batch_size=30, fileName='../../src/features.pickle',
-             n_in=27, n_hidden=[20, 10, 10], n_out=2):
+             batch_size=30, fileName='../../src/features.pickle', saveName="trained_mlp",
+             n_in=80, n_hidden=[20, 10, 10], n_out=2):
     """
     Demonstrate stochastic gradient descent optimization for a multilayer
     perceptron
@@ -209,7 +209,10 @@ def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=5000,
     #	that we obtained from our other neural network    #
     #	algorithm, instead of using the MNIST dataset     #
     #######################################################
-    datasets = pickle.load( open(fileName) )
+    if type(fileName) == str:
+        datasets = pickle.load( open(fileName) )
+    else:
+        datasets = fileName
 
     train_set_x, train_set_y = datasets[0]
     valid_set_x, valid_set_y = datasets[1]
@@ -388,9 +391,8 @@ def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=5000,
           (best_validation_loss * 100., best_iter + 1, test_score * 100.))
     print(('The code ran for %.2fm' % ((end_time - start_time) / 60.)))
 
-    fileHandler = open('trained_mlp.obj', 'wb')
-    pickle.dump(classifier.params, fileHandler)
-    fileHandler.close()
+    with open(saveName+'.pkl', 'wb') as handle:
+        pickle.dump(classifier, handle)
 
 if __name__ == '__main__':
 	test_mlp()
