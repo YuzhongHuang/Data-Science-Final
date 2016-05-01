@@ -1,0 +1,273 @@
+import re
+
+def categorize_icd9(codes):
+    ''' Categorizes all of the ICD9 codes into larger bins '''
+    bins = []
+
+    if codes == None:
+        return None
+    
+    for i in codes:
+        # GROUP 1: infectious and parasitic diseases
+        if bool(re.match('^00[0-9]', i)):
+            bins.append("intestinal_infectious_diseases")
+        elif bool(re.match('^01[0-8]', i)):
+            bins.append("tuberculosis")
+        elif bool(re.match('^02[0-7]', i)):
+            bins.append("zoonotic_bacterial_diseases")
+        elif bool(re.match('^03[0-9]|04[0-1]', i)):
+            bins.append("other_bacterial_diseases")
+        elif bool(re.match('^04[2-4]', i)):
+            bins.append("hiv")
+        elif bool(re.match('^05[0-9]', i)):
+            bins.append("viral_diseases_exanthem")
+        elif bool(re.match('^06[0-6]', i)):
+            bins.append("arthropod_viral_diseases")
+        elif bool(re.match('^07[0-9]', i)):
+            bins.append("chlamydiae")
+        elif bool(re.match('^08[0-8]', i)):
+            bins.append("rickettsioses")
+        elif bool(re.match('^09[0-9]', i)):
+            bins.append("syphilis_venereal")
+        elif bool(re.match('^10[0-4]', i)):
+            bins.append("spirochetal_diseases")
+        elif bool(re.match('^11[0-8]', i)):
+            bins.append("mycoses")
+        elif bool(re.match('^12[0-9]', i)):
+            bins.append("helminthiases")
+        elif bool(re.match('^13[0-6]', i)):
+            bins.append("other_infectious_parasitic_diseases")
+        elif bool(re.match('^13[7-9]', i)):
+            bins.append("late_infectious_parasitic_diseases")
+            
+        # GROUP 2: neoplasms
+        elif bool(re.match('^14[0-9]', i)):
+            bins.append("oral_neoplasm")
+        elif bool(re.match('^15[0-9]', i)):
+            bins.append("digestive_neoplasm")
+        elif bool(re.match('^16[0-5]', i)):
+            bins.append("respiratory_neoplasm")
+        elif bool(re.match('^17[0-5]', i)):
+            bins.append("bone_neoplasm")
+        elif bool(re.match('^176', i)):
+            bins.append("kaposi_sarcoma")
+        elif bool(re.match('^179|18[0-9]', i)):
+            bins.append("genitourinary_neoplasm")
+        elif bool(re.match('^19[0-9]', i)):
+            bins.append("other_neoplasm")
+        elif bool(re.match('^20[0-8]', i)):
+            bins.append("lymphatic_neoplasm")
+        elif bool(re.match('^2[1-2][0-9]', i)):
+            bins.append("benign_neoplasm")
+        elif bool(re.match('^23[0-4]', i)):
+            bins.append("carcinoma_in_situ")
+        elif bool(re.match('^23[5-8]', i)):
+            bins.append("uncertain_neoplasm")
+        elif bool(re.match('^239', i)):
+            bins.append("unspecified_neoplasm")
+
+        # GROUP 3: endocrine, nutritional, and metabolic diseases
+        elif bool(re.match('^24[0-6]', i)):
+            bins.append("thyroid_diseases")
+        elif bool(re.match('^249', i)):
+            bins.append("secondary_diabetes")
+        elif bool(re.match('^250', i)):
+            bins.append("diabetes")
+        elif bool(re.match('^25[1-9]', i)):
+            bins.append("other_endocrine_diseases")
+        elif bool(re.match('^26[0-9]', i)):
+            bins.append("nutritional_deficiencies")
+        elif bool(re.match('^27[0-9]', i)):
+            bins.append("other_metabolic_immunity_disorders")
+
+        # GROUP 4: diseases of the blood, blood-forming organs
+        elif bool(re.match('^28[0-5]', i)):
+            bins.append("anemia")
+        elif bool(re.match('^28[6-7]', i)):
+            bins.append("coagulation_hemorrhagic")
+        elif bool(re.match('^28[8-9]', i)):
+            bins.append("other_blood")
+
+        # GROUP 5: mental disorders
+        elif bool(re.match('^29[0-9]', i)):
+            bins.append("psychosis")
+        elif bool(re.match('^300', i)):
+            bins.append("neurotic_disorders")
+        elif bool(re.match('^301', i)):
+            bins.append("personality_disorders")
+        elif bool(re.match('^302', i)):
+            bins.append("psychosexual_disorders")
+        elif bool(re.match('^30[3-5]', i)):
+            bins.append("psychoactive_substance")
+        elif bool(re.match('^30[6-9]|31[0-1]', i)):
+            bins.append("other_mental_disorders")
+        elif bool(re.match('^31[2-6]', i)):
+            bins.append("child_mental_disorders")
+        elif bool(re.match('^31[7-9]', i)):
+            bins.append("mental_retardation")
+
+        # GROUP 6a: diseases of the nervous system
+        elif bool(re.match('^3[2-5][0-9]', i)):
+            bins.append("inflammatory_central_nervous")
+        elif bool(re.match('^33[0-7]', i)):
+            bins.append("hereditary_degenerative_central_nervous")
+        elif bool(re.match('^338', i)):
+            bins.append("pain")
+        elif bool(re.match('^339', i)):
+            bins.append("headache")
+        elif bool(re.match('^34[0-9]', i)):
+            bins.append("other_central_nervous")
+        elif bool(re.match('^35[0-9]', i)):
+            bins.append("peripheral_nervous_diseases")
+
+        # GROUP 6b: diseases of the sense organs
+        elif bool(re.match('^3[6-7][0-9]', i)):
+            bins.append("eye_adnexa_disorders")
+        elif bool(re.match('^38[0-9]', i)):
+            bins.append("ear_diseases")
+            
+        # GROUP 7: diseases of the circulatory system
+        elif bool(re.match('^39[0-2]', i)):
+            bins.append("acute_rheumatic_fever")
+        elif bool(re.match('^39[3-8]', i)):
+            bins.append("chronic_rheumatic_diseases")
+        elif bool(re.match('^40[1-5]', i)):
+            bins.append("hypertension")
+        elif bool(re.match('^41[0-4]', i)):
+            bins.append("ischemic_heart_disease")
+        elif bool(re.match('^41[5-7]', i)):
+            bins.append("pulmonary_circulation_diseases")
+        elif bool(re.match('^42[0-9]', i)):
+            bins.append("other_heart_disease")
+        elif bool(re.match('^43[0-8]', i)):
+            bins.append("cerebrovascular_disease")
+        elif bool(re.match('^44[0-8]', i)):
+            bins.append("arteries_diseases")
+        elif bool(re.match('^45[1-9]', i)):
+            bins.append("vein_lymphatics_diseases")
+
+        # GROUP 8: diseases of the respiratory system
+        elif bool(re.match('^46[0-6]', i)):
+            bins.append("acute_respiratory_infections")
+        elif bool(re.match('^47[0-8]', i)):
+            bins.append("other_upper_respiratory_diseases")
+        elif bool(re.match('^48[0-8]', i)):
+            bins.append("pneumonia_influenza")
+        elif bool(re.match('^49[0-6]', i)):
+            bins.append("obstructive_pulmonary_disease")
+        elif bool(re.match('^50[0-8]', i)):
+            bins.append("pneumoconioses")
+        elif bool(re.match('^51[0-9]', i)):
+            bins.append("other_respiratory_diseases")
+
+        # GROUP 9: diseases of the digesetive system
+        elif bool(re.match('^52[0-9]', i)):
+            bins.append("oral_diseases")
+        elif bool(re.match('^53[0-7]', i)):
+            bins.append("esophagus_diseases")
+        elif bool(re.match('^54[0-3]', i)):
+            bins.append("appendicitis")
+        elif bool(re.match('^55[0-3]', i)):
+            bins.append("abdominal_hernia")
+        elif bool(re.match('^55[5-8]', i)):
+            bins.append("enteritis_colitis")
+        elif bool(re.match('^56[0-9]', i)):
+            bins.append("other_intestines_peritoneum_diseases")
+        elif bool(re.match('^57[0-9]', i)):
+            bins.append("other_digestive_diseases")
+
+        # GROUP 10: diseases of the genitourinary system
+        elif bool(re.match('^58[0-9]', i)):
+            bins.append("nephritis")
+        elif bool(re.match('^59[0-9]', i)):
+            bins.append("other_urinary_diseases")
+        elif bool(re.match('^60[0-8]', i)):
+            bins.append("male_genital_diseases")
+        elif bool(re.match('^61[7-9]|62[0-9]', i)):
+            bins.append("female_genital_diseases")
+
+        # GROUP 11: complications of pregnancy, childbirth, and the puerperium
+        elif bool(re.match('^63[0-3]', i)):
+            bins.append("ectopic_molar_pregnancy")
+        elif bool(re.match('^63[4-9]', i)):
+            bins.append("other_preg_abortive_outcome")
+        elif bool(re.match('^64[0-9]', i)):
+            bins.append("complications_preg")
+        elif bool(re.match('^65[0-9]', i)):
+            bins.append("normal_delivery")
+        elif bool(re.match('^66[0-9]', i)):
+            bins.append("complications_labor")
+        elif bool(re.match('^67[0-6]', i)):
+            bins.append("complications_puerperium")
+        elif bool(re.match('^67[8-9]', i)):
+            bins.append("other_maternal_fetal_complications")
+
+        # GROUP 12: diseases of the skin and subcutaneous tissue
+        elif bool(re.match('^68[0-6]', i)):
+            bins.append("infections_skin")
+        elif bool(re.match('^69[0-8]', i)):
+            bins.append("other_inflammatory_skin")
+        elif bool(re.match('^70[0-9]', i)):
+            bins.append("other_diseases_skin")
+
+        # GROUP 13: diseases of the musculoskeletal system and connective tissue
+        elif bool(re.match('^71[0-9]', i)):
+            bins.append("arthropathies")
+        elif bool(re.match('^72[0-4]', i)):
+            bins.append("dorsopathies")
+        elif bool(re.match('^72[5-9]', i)):
+            bins.append("rheumatism")
+        elif bool(re.match('^73[0-9]', i)):
+            bins.append("osteopathies")
+
+        # GROUP 14: congenital anomalies
+        elif bool(re.match('^74[0-2]', i)):
+            bins.append("congenital_nervous")
+        elif bool(re.match('^74[3-4]', i)):
+            bins.append("congenital_face")
+        elif bool(re.match('^74[5-7]', i)):
+            bins.append("congenital_circulatorhy")
+        elif bool(re.match('^748', i)):
+            bins.append("congenital_respiratory")
+        elif bool(re.match('^749|75[0-1]', i)):
+            bins.append("congenital_digestive")
+        elif bool(re.match('^752', i)):
+            bins.append("congenital_genital")
+        elif bool(re.match('^753', i)):
+            bins.append("congenital_urinary")
+        elif bool(re.match('^75[4-6]', i)):
+            bins.append("congenital_musculoskeletal")
+        elif bool(re.match('^757', i)):
+            bins.append("congenital_integument")
+        elif bool(re.match('^758', i)):
+            bins.append("congenital_chromosomal")
+        elif bool(re.match('^759', i)):
+            bins.append("congenital_other")
+
+        # GROUP 15: certain conditions originatiing in the perinatal period
+        elif bool(re.match('^76[0-3]', i)):
+            bins.append("maternal_perinatal")
+        elif bool(re.match('^76[4-9]|77[0-9]', i)):
+            bins.append("other_perinatal")
+            
+        # GROUP 16: symptoms, signs, and ill-defined conditions
+        elif bool(re.match('^78[0-9]', i)):
+            bins.append("symptoms")
+        elif bool(re.match('^79[0-6]', i)):
+            bins.append("nonspecific_abnormal_findings")
+        elif bool(re.match('^79[7-9]', i)):
+            bins.append("illdefined_unknown_causes")
+
+        # GROUP 17: injury and poisoning
+        elif bool(re.match('^8[0-9][0-9]|9[0-9][0-9]', i)):
+            bins.append("injury_poisoning")
+            
+        # GROUP E: external causes of injury
+        elif bool(re.match('^e|E', i)):
+            bins.append("external_injury")
+            
+        # GROUP V: supplementary classification
+        elif bool(re.match('^v|V', i)):
+            bins.append("supplementary_classification")
+
+    return bins
