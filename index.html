@@ -20,24 +20,49 @@
 
     <section class="main-content">
       <h1>
-<a id="project-story-2" class="anchor" href="#project-story-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Story 2</h1>
+<a id="data-science-final-project" class="anchor" href="#data-science-final-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Science Final Project</h1>
 
 <h4>
 <a id="yuzhong-huang-jay-woo-wilson-tang" class="anchor" href="#yuzhong-huang-jay-woo-wilson-tang" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Yuzhong Huang, Jay Woo, Wilson Tang</h4>
 
-<h2>
-<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overview</h2>
-
-<p>At the end of our last phase we were working on finishing our data exploration and reformating, feature learning neural network, feedforward prediction neural network, and visualizations of our feature learning model. During this phase, we built the feature learning systems, generated the learned features and recoded the icd-9 features. Right now, we are deploying the learned features to our prediction neural network to predict diabetes. </p>
+<p><img src="https://lh3.googleusercontent.com/-dGUb_5Vr-To/Vyeky1w9lRI/AAAAAAAAAhY/xKM8rUROQWgBrLL3FWDRUWrqB5omWNQewCLcB/s0/brand.png" alt="enter image description here" title="brand.png"></p>
 
 <h2>
-<a id="data-exploration--reformatting" class="anchor" href="#data-exploration--reformatting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Exploration + Reformatting</h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>After extensive exploration of the data, we found that the lab and medication data was too diverse and weakly linked to our patients to utilize in our project. We decided to exclude the two and focus on the ICD-9 codes and general information such as age, gender, weight, height and etc.</p>
+<p>On June 12, 2012, healthcare company Practice Fusion published a Kaggle competition to identify patients with Type 2 Diabetes using their de-identified electronic health record data. The main purpose of this contest is to better understand people’s medical history on a large scale as well as to facilitate the diagnosis process. We took a slightly different approach in that instead of looking at just diabetes, we built a tool that can be used to predict any diagnosis as defined by the user.</p>
 
-<p>We tested 2 groupings for ICD-9 codes: 17 broad super-categories and 107 specific subcategories with our feature learning neural network (narrowing from 13,000 possible codes). </p>
+<h2>
+<a id="system-architecture" class="anchor" href="#system-architecture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>System Architecture</h2>
+
+<p><img src="https://lh3.googleusercontent.com/-R7PbzlVeni8/VyemaY9MK_I/AAAAAAAAAho/t43daQ1PC-gxH-ezcWgLwB_F6SFnLpNPwCLcB/s0/system+architecture.png" alt="enter image description here" title="system architecture.png"></p>
+
+<p>The whole system takes in the processed dataset (as a CSV) and the diagnosis to be predicted (as a string). The inputs are then fed to the dataset generator to separate the features matrix and target vector so that we can use the features to predict the target for patients. After that, we randomly divide the dataset into a train set, validation set, and test set and transform them into Theano shared variables with our data parser.</p>
+
+<p>For prediction, we used two approaches. Our first approach was simply feeding the data into the prediction neural network. Our other approach was to first use a feature-learning system to reduce the dimensionality of our data and then pass it through a prediction neural network. For the second method, used an algorithm called the stacked denoising autoencoder.</p>
+
+<p>In the following sections, we will explain each of our steps in getting the whole system up, starting with how we pre-processed our data.</p>
 
 <p>We ended up deciding that 107 subcategories represented the ICD-9 data properly for our network.</p>
+
+<h2>
+<a id="data-cleaning-and-exploration" class="anchor" href="#data-cleaning-and-exploration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Cleaning and Exploration</h2>
+
+<p>Originally, our data came from an SQL database, and as such, the data was not organized by patient or by any other convenient ordering. Several of the files were labeled “conversion” files, whose sole purpose was to convert from one set of IDs to another. For instance, each unique diagnosis ID can be linked to each patient ID using a conversion file. </p>
+
+<p><img src="https://lh3.googleusercontent.com/-euBTzbPd5iw/VyenSYrgyHI/AAAAAAAAAh0/cmhpSt1SfrQjs2GTeaTamLQEs1aVhMqGgCLcB/s0/13162263_10207911907734684_1405172986_n.png" alt="enter image description here" title="data.png"></p>
+
+<p>Eventually, we were able to centralize the data into one file containing each patient’s basic information (height, weight, blood pressure, etc.), diagnoses, and IDs.</p>
+
+<p><img src="https://lh3.googleusercontent.com/-tF1PwDzWG48/Vyent1T5w-I/AAAAAAAAAiA/POqm9tpO8AITubTFVlDNoiO3QZ10kwu3gCLcB/s0/13128795_10207911924055092_1163516093_o.png" alt="enter image description here" title="example.png"></p>
+
+<p>Our next goal was to generate features for each patient so that the data can be fed into our machine learning model. In order to do so, we looked at what are called the ICD-9 codes for each patient’s diagnoses. ICD stands for International Statistical Classification of Diseases and Related Health Problems and is used to group similar diagnoses together. For instance, the ICD-9 codes 390 through 459 refer to diseases of the circulatory system.</p>
+
+<p><img src="https://lh3.googleusercontent.com/-lQ-UABtLM1k/Vyen7GnfoNI/AAAAAAAAAiM/3W0zu1n_6xMGCH4xp0pW53mZe3cbdf9EACLcB/s0/icd-9-codes.jpg" alt="enter image description here" title="icd-9-codes.jpg"></p>
+
+<p>We converted each ICD-9 code into its respective grouping and ended up with nearly 100 diagnosis groupings, such as “diabetes” and “hypertension.” We then went through each patient, and if he/she had a certain diagnosis, we put a 1 for that feature and 0 otherwise. If a patient were diagnosed with appendicitis, they would have a 1 in their appendicitis column.</p>
+
+<p>Finally, we looked at how the diagnoses were connected. In the graph below, each node represents a different diagnosis. An edge between two diagnoses means that one or more patients was diagnosed with both conditions at one point. Nodes that are further away from the center are least connected to other nodes, while nodes at the center are very densely connected to most other diagnoses.</p>
 
 <h2>
 <a id="feature-learning-neural-network" class="anchor" href="#feature-learning-neural-network" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Feature Learning Neural Network</h2>
@@ -46,9 +71,9 @@
 
 <p>The autoencoder is a special kind of neural network that effectively reduces the dimensionality of the input. For example, by reducing 6 features to 4 features and then reconstructing the 6 features from 4 features, the network is forced to combine dimensions that are highly related to each other. In this way, the network could potentially extract some important features out from the raw inputs. </p>
 
-<p>We built a single-layer, denoising autoencoder and ran a simple example on it by taking 27 features and outputting 22 learned features. Also, we added 30% noise by setting 30 percent of the input features to be 0. By doing that, the network cannot rely much on each individual features, since some of the features are not reliable. Instead, the network is forced to learn the relationships between features to predict the value of noise by using other values. </p>
+<p>We built a single-layer, denoising autoencoder and ran a simple example on it by taking 106 features and outputting 80 learned features. Also, we added 30% noise by setting 30 percent of the input features to be 0. By doing that, the network cannot rely much on each individual features, since some of the features are not reliable. Instead, the network is forced to learn the relationships between features to predict the value of noise by using other values. </p>
 
-<p>We trained 100 epochs over our network and compared the reconstructed features with the original ones. The result is quite inspiring: the standard deviation of the 27 reconstructed features is about 0.04. Since all of the input features are normalized and are in range of 0 to 1. With a standard deviation of 0.04, the model is doing a good job reconstructing the 27 features from the 22 learned features. But we still need to test how good are the 22 features in representing the data with our prediction network. </p>
+<p>We trained 100 epochs over our network and compared the reconstructed features with the original ones. The result is quite inspiring: the standard deviation of the 106 reconstructed features is about 0.04. Since all of the input features are normalized and are in range of 0 to 1. With a standard deviation of 0.04, the model is doing a good job reconstructing the 27 features from the 22 learned features. But we still need to test how good are the 22 features in representing the data with our prediction network. </p>
 
 <h2>
 <a id="prediction-neural-network" class="anchor" href="#prediction-neural-network" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prediction Neural Network</h2>
@@ -60,9 +85,20 @@
 <p>We implemented the neural network using Theano’s multilayer perceptron tutorial. We noticed that the model had an incredibly low error rate, even with randomized weights, but this was most likely due to the fact that there weren’t a lot of patients who have diabetes in the dataset (less than 1%). In the future, we are considering predicting for a more prevalent condition like hypertension, which many more the patients in our dataset actually have.</p>
 
 <h2>
-<a id="plans-for-final-phase" class="anchor" href="#plans-for-final-phase" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Plans for Final Phase</h2>
+<a id="result" class="anchor" href="#result" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Result</h2>
 
-<p>Our next step would be compare the prediction result of learned features with prediction result of original features. After that, we will build a stacked denoising autoencoder that learns higher level features. We hope to synthesize our prediction system and make the model general that can take a target name, and the system will generates a model for predicting the given target. We would also like to get some visualizations made by the end of the project, so that we can present our work very cleanly. One of our options is to visualize one of the hidden layers in the neural network to see what the model weights more heavily. Since our dataset does not comprise of images, it may be more difficult to make a clean graph.</p>
+<p>We tested our algorithm on a variety of diagnoses (hypertension, dorsopathies, and acute respiratory infections) to see how well it performed for different predictors. We found that the model was able to predict patients who had hypertension the best, probably because there was more data available for that specific diagnosis. </p>
+
+<p><img src="https://lh3.googleusercontent.com/-_LIII9--YmY/VyjXn6JBTvI/AAAAAAAAAi4/lc6_Nebw0uA2aJTH1nekr2PAo8CRgTyjQCLcB/s0/13148449_10207919145675628_1107966449_o.png" alt="enter image description here" title="error_plot.png"></p>
+
+<p>In order to validate our model, we looked at what features the model weighted most heavily for predicting hypertension (high blood pressure). Each of these features all had something to do with blood pressure, so we trusted that our algorithm was working correctly.</p>
+
+<p><img src="https://lh3.googleusercontent.com/-5vsNVPK38UI/VyjXuqxnyjI/AAAAAAAAAjA/NqQbcpFrvJgwxwjL_mC_nU4fpDJBANkVgCLcB/s0/13112412_10207911431922789_2118678334_o.png" alt="enter image description here" title="weights.png"></p>
+
+<h2>
+<a id="future-work" class="anchor" href="#future-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future Work</h2>
+
+<p>In the future, we hope to improve the performance of our model by incorporating the other features in our dataset, such as what medications each patient received and what providers each patient consulted with. Currently, we are only looking at the diagnoses and the ICD-9 codes, but there may be valuable information that could be extracted from the other files. Additionally, we would also like to investigate different machine learning structures that could potentially work better with the given dataset. Perhaps there are other algorithms that work significantly better for our particular case.</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/YuzhongHuang/Data-Science-Final">Data-science-final</a> is maintained by <a href="https://github.com/YuzhongHuang">YuzhongHuang</a>.</span>
