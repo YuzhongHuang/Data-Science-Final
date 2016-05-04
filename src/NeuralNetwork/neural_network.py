@@ -335,6 +335,7 @@ def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=5000,
 
     epoch = 0
     done_looping = False
+    all_error = []
 
     while (epoch < n_epochs) and (not done_looping):
         epoch = epoch + 1
@@ -381,6 +382,8 @@ def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=5000,
                           (epoch, minibatch_index + 1, n_train_batches,
                            test_score * 100.))
 
+                    all_error.append(test_score)
+
             if patience <= iter:
                 done_looping = True
                 break
@@ -395,3 +398,5 @@ def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=5000,
     with fileHandler as handle:
         pickle.dump(classifier.params, handle)
     fileHandler.close()
+
+    return all_error

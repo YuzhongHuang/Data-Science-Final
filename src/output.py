@@ -28,6 +28,8 @@ def get_features(da, inputs):
     for inp in inputs:
         feature = da.get_hidden_values(inp).eval()
         features.append(feature)
+        if len(features) % 50 == 0:
+            print len(features)
     return numpy.asarray(features)
 
 def output(da, data_x, data_y):
